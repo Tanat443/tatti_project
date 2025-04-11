@@ -1,9 +1,0 @@
-rootProject.name = 'tatti-app'
-
-include 'user-service'
-include 'catalog-service'
-include 'order-service'
-include 'constructor-service'
-include 'notification-service'
-include 'chat-service'
-include 'api-gateway'
