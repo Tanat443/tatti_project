@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  keycloak:
+    # Используем образ Keycloak, который у вас уже есть (16.1.1)
+    image: quay.io/keycloak/keycloak:latest
+    container_name: keycloak
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://keycloak-db/postgres
+      KC_DB_USERNAME: postgres
+      KC_DB_PASSWORD: qwerty
+    ports:
+      - "8081:8080"
+    command: 
+      - start-dev
+      - --http-relative-path=/auth
+    depends_on:
+      - keycloak-db
+
+  keycloak-db:
+    image: 'postgres:12.4-alpine'
+    container_name: 'keycloak-db-container'
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: qwerty
+      POSTGRES_DB: postgres
+    ports:
+      - 2345:5432
+
+  rabbitmq:
+    # У вас есть несколько тегов RabbitMQ. Можно использовать 3-management
+    # или 3.12.12-management. Возьмём 3-management для примера.
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"   # порт для сообщений
+      - "15672:15672" # порт для веб-интерфейса
+    # Если нужно сохранять данные RabbitMQ между перезапусками, добавляем volume:
+    # volumes:
+    #   - ./rabbitmq_data:/var/lib/rabbitmq
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
+    # Аналогично, для сохранения данных:
+    # volumes:
+    #   - ./redis_data:/data
