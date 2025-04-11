@@ -1,0 +1,51 @@
+spring:
+  application:
+    name: api-gateway
+  main:
+    web-application-type: reactive
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: user-service
+          uri: lb://user-service
+          predicates:
+            - Path=/api/users/**
+          filters:
+            - AuthenticationFilter
+#        - id: order-service
+#          uri: lb://order-service
+#          predicates:
+#            - Path=/api/orders/**
+#          filters:
+#            - AuthenticationFilter
+#        - id: catalog-service
+#          uri: lb://catalog-service
+#          predicates:
+#            - Path=/api/shops/**
+#          filters:
+#            - AuthenticationFilter
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+
+server:
+  port: 8080
+keycloak:
+  url: http://localhost:8081/auth
+  realm: tatti-app
+  client-id: tatti-app
+  client-secret: 1KOqAXWzdkgwvNt2ZD63CZXTUeeM8ZAT
+  username: admin
+  password: admin
+  grant-type: password
+logging:
+  level:
+    org.springframework: DEBUG
+
+user:
+  service:
+    url: http://localhost:8082
