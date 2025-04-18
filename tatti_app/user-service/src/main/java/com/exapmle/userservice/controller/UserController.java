@@ -36,4 +36,9 @@ public class UserController {
         UUID keycloakId = UUID.fromString(jwt.getSubject());
         return userService.getCurrentUser(keycloakId);
     }
+
+    @GetMapping()
+    public String getHello() {
+        return "Hello world";
+    }
 }
