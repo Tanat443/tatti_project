@@ -10,9 +10,13 @@ public interface ProductMapper {
 
     ProductMapper INSTANCE = Mappers.getMapper(ProductMapper.class);
 
-    @Mapping(source = "category.id", target = "categoryId")
     ProductDTO toDTO(Product product);
 
-    @Mapping(source = "categoryId", target = "category.id")
     Product toEntity(ProductDTO productDTO);
+
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    void updateEntity(@MappingTarget Product target, ProductDTO source);
+
 }
