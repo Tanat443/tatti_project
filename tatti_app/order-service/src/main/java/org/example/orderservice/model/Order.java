@@ -21,7 +21,7 @@ public class Order {
 
     private BigDecimal price;
 
-    private String status;
+    private OrderStatus status;
 
     @Column("customer_id")
     private Long customerId;
@@ -37,5 +37,4 @@ public class Order {
 
     private LocalDateTime pushNotificationDeadline;
 
-    // геттеры и сеттеры (можно сгенерировать через Lombok, если используешь его)
 }

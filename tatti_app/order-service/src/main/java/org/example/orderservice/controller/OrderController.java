@@ -3,6 +3,7 @@ package org.example.orderservice.controller;
 import lombok.RequiredArgsConstructor;
 import org.example.orderservice.dto.OrderRequestDTO;
 import org.example.orderservice.dto.OrderResponseDTO;
+import org.example.orderservice.model.OrderStatus;
 import org.example.orderservice.service.OrderService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -55,4 +56,14 @@ public class OrderController {
                 .then(Mono.just(ResponseEntity.status(HttpStatus.NO_CONTENT).<Void>build()))  // Указание типа <Void>
                 .switchIfEmpty(Mono.just(ResponseEntity.status(HttpStatus.NOT_FOUND).build()));
     }
+
+    @PatchMapping("/{id}/status")
+    public Mono<ResponseEntity<OrderResponseDTO>> changeStatus(@PathVariable Long id, @RequestParam OrderStatus status) {
+        return orderService.changeStatus(id, status)
+                .map(ResponseEntity::ok)
+                .onErrorResume(e -> Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST).build()))
+                .switchIfEmpty(Mono.just(ResponseEntity.status(HttpStatus.NOT_FOUND).build()));
+    }
+
+
 }
