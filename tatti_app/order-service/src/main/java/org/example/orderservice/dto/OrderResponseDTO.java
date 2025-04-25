@@ -1,8 +1,11 @@
 package org.example.orderservice.dto;
 
+import lombok.Data;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+@Data
 public class OrderResponseDTO {
     public Long id;
     public String orderType;

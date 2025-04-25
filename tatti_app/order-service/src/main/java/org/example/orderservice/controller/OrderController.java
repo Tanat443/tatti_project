@@ -3,9 +3,8 @@ package org.example.orderservice.controller;
 import lombok.RequiredArgsConstructor;
 import org.example.orderservice.dto.OrderRequestDTO;
 import org.example.orderservice.dto.OrderResponseDTO;
-import org.example.orderservice.model.OrderStatus;
+import org.example.orderservice.dto.OrderWithNotificationDTO;
 import org.example.orderservice.service.OrderService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
@@ -19,51 +18,53 @@ public class OrderController {
     private final OrderService orderService;
 
     @PostMapping
-    public Mono<ResponseEntity<OrderResponseDTO>> createOrder(@RequestBody OrderRequestDTO request) {
-        return orderService.createOrder(request)
-                .map(order -> ResponseEntity.status(HttpStatus.CREATED).body(order));
-    }
-
-    @PutMapping("/{id}")
-    public Mono<ResponseEntity<OrderResponseDTO>> updateOrder(@PathVariable Long id, @RequestBody OrderRequestDTO request) {
-        return orderService.updateOrder(id, request)
-                .map(order -> ResponseEntity.ok(order))
-                .switchIfEmpty(Mono.just(ResponseEntity.status(HttpStatus.NOT_FOUND).build()));
+    public Mono<ResponseEntity<OrderWithNotificationDTO>> createOrder(@RequestBody OrderRequestDTO dto) {
+        return orderService.createOrderWithNotification(dto)
+                .map(ResponseEntity::ok);
     }
 
     @GetMapping("/{id}")
     public Mono<ResponseEntity<OrderResponseDTO>> getOrderById(@PathVariable Long id) {
         return orderService.getOrderById(id)
-                .map(order -> ResponseEntity.ok(order))
-                .switchIfEmpty(Mono.just(ResponseEntity.status(HttpStatus.NOT_FOUND).build()));
+                .map(ResponseEntity::ok)
+                .switchIfEmpty(Mono.just(ResponseEntity.notFound().build()));
+    }
+
+
+    @PutMapping("/{id}")
+    public Mono<ResponseEntity<OrderWithNotificationDTO>> updateOrder(@PathVariable Long id,
+                                                                      @RequestBody OrderRequestDTO request) {
+        return orderService.updateOrderWithNotification(id, request)
+                .map(ResponseEntity::ok)
+                .switchIfEmpty(Mono.just(ResponseEntity.notFound().build()));
+    }
+
+    @DeleteMapping("/{id}")
+    public Mono<ResponseEntity<OrderWithNotificationDTO>> deleteOrder(@PathVariable Long id) {
+        return orderService.deleteOrderWithNotification(id)
+                .map(ResponseEntity::ok)
+                .switchIfEmpty(Mono.just(ResponseEntity.notFound().build()));
+    }
+
+    @PatchMapping("/{id}/status")
+    public Mono<ResponseEntity<OrderWithNotificationDTO>> changeStatus(
+            @PathVariable Long id,
+            @RequestBody OrderWithNotificationDTO statusDto) {
+        return orderService.changeStatusWithNotification(id, statusDto.getStatus())
+                .map(ResponseEntity::ok)
+                .onErrorResume(e -> Mono.just(ResponseEntity.badRequest().build()))
+                .switchIfEmpty(Mono.just(ResponseEntity.notFound().build()));
     }
 
     @GetMapping("/customer/{customerId}")
     public Flux<ResponseEntity<OrderResponseDTO>> getOrdersByCustomer(@PathVariable Long customerId) {
         return orderService.getOrdersByCustomerId(customerId)
-                .map(order -> ResponseEntity.ok(order));
+                .map(ResponseEntity::ok);
     }
 
     @GetMapping("/confectioner/{confectionerId}")
     public Flux<ResponseEntity<OrderResponseDTO>> getOrdersByConfectioner(@PathVariable Long confectionerId) {
         return orderService.getOrdersByConfectionerId(confectionerId)
-                .map(order -> ResponseEntity.ok(order));
+                .map(ResponseEntity::ok);
     }
-
-    @DeleteMapping("/{id}")
-    public Mono<ResponseEntity<Void>> deleteOrder(@PathVariable Long id) {
-        return orderService.deleteOrder(id)
-                .then(Mono.just(ResponseEntity.status(HttpStatus.NO_CONTENT).<Void>build()))  // Указание типа <Void>
-                .switchIfEmpty(Mono.just(ResponseEntity.status(HttpStatus.NOT_FOUND).build()));
-    }
-
-    @PatchMapping("/{id}/status")
-    public Mono<ResponseEntity<OrderResponseDTO>> changeStatus(@PathVariable Long id, @RequestParam OrderStatus status) {
-        return orderService.changeStatus(id, status)
-                .map(ResponseEntity::ok)
-                .onErrorResume(e -> Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST).build()))
-                .switchIfEmpty(Mono.just(ResponseEntity.status(HttpStatus.NOT_FOUND).build()));
-    }
-
-
 }
