@@ -106,4 +106,20 @@ public class OrderService {
                 return false;
         }
     }
+
+
+    public Mono<Void> processPushTimeoutOrders() {
+        LocalDateTime now = LocalDateTime.now();
+        return orderRepository.findAllByStatusAndPushNotificationDeadlineBefore(OrderStatus.PUSH_PENDING, now)
+                .flatMap(order -> {
+                    order.setStatus(OrderStatus.ACTIVE);
+                    order.setUpdatedAt(now);
+                    return orderRepository.save(order)
+                            .flatMap(saved ->
+                                    notificationService.sendPushNotification(saved.getId(), "⏱ Заказ автоматически переведён в активный режим")
+                            );
+                })
+                .then(); // возвращает Mono<Void>
+    }
+
 }

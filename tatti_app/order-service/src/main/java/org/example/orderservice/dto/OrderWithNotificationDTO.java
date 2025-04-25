@@ -9,12 +9,10 @@ import org.example.orderservice.model.OrderStatus;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderWithNotificationDTO {
-    private OrderResponseDTO order;
     private String notificationMessage;
     private OrderStatus status;
 
     public OrderWithNotificationDTO(OrderResponseDTO order, String notificationMessage) {
-        this.order = order;
         this.notificationMessage = notificationMessage;
         this.status = order != null ? OrderStatus.valueOf(order.getStatus()) : null;
     }
