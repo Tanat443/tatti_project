@@ -4,6 +4,8 @@ import org.example.productservice.model.Category;
 import org.example.productservice.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,23 +16,25 @@ public class CategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
 
-    public List<Category> getAllCategories() {
+    public Flux<Category> getAllCategories() {
         return categoryRepository.findAll();
     }
 
-    public Optional<Category> getCategoryById(Long id) {
+    public Mono<Category> getCategoryById(Long id) {
         return categoryRepository.findById(id);
     }
 
-    public Category createCategory(Category category) {
+    public Mono<Category> createCategory(Category category) {
         return categoryRepository.save(category);
     }
 
-    public Category updateCategory(Long id, Category updatedCategory) {
-        return categoryRepository.findById(id).map(category -> {
-            category.setName(updatedCategory.getName());
-            return categoryRepository.save(category);
-        }).orElseThrow(() -> new RuntimeException("Category not found"));
+    public Mono<Category> updateCategory(Long id, Category updatedCategory) {
+        return categoryRepository.findById(id)
+                .switchIfEmpty(Mono.error(new RuntimeException("Category not found")))
+                .flatMap(existingCategory -> {
+                    existingCategory.setName(updatedCategory.getName());
+                    return categoryRepository.save(existingCategory);
+                });
     }
 
     public void deleteCategory(Long id) {

@@ -1,0 +1,8 @@
+server:
+  port: 8083
+
+spring:
+  r2dbc:
+    url: r2dbc:pool:postgresql://localhost:2346/postgres
+    username: postgres
+    password: qwerty

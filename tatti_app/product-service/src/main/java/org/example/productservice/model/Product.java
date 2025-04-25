@@ -1,17 +1,21 @@
 package org.example.productservice.model;
 
-import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 
-@Entity
+import java.time.LocalDateTime;
+import java.util.Date;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "products")
+@Builder
+@Table("products")
 public class Product {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
@@ -21,8 +25,9 @@ public class Product {
     private String photo;
     private Double weight;
 
-    @ManyToOne
-    @JoinColumn(name = "category_id")
-    private Category category;
+    @Column("category_id")
+    private Long categoryId;
 
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }

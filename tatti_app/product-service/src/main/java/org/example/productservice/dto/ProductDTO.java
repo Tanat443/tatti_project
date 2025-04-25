@@ -1,12 +1,12 @@
 package org.example.productservice.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+import java.util.Date;
+
+@Setter
+@Getter
 public class ProductDTO {
     private Long id;
     private String name;
@@ -17,3 +17,4 @@ public class ProductDTO {
     private Double weight;
     private Long categoryId;
 }
+
