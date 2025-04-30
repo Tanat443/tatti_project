@@ -23,6 +23,15 @@ bin/
 /nbdist/
 /.nb-gradle/
 
+.tmp
+.idea
+bakr-test.txt
+native
+daemon
+caches
+wrapper
+
+
 ### VS Code ###
 .vscode/
 
