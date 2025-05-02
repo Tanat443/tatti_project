@@ -5,11 +5,10 @@ on:
     branches:
       - main
     paths:
-      - '**.java'
-      - '**.yml'
+      - 'tatti-app/**'
+      - '.github/workflows/build-and-push.yml'
       - 'build.gradle'
       - 'settings.gradle'
-      - '.github/workflows/build-and-push.yml'
 
 jobs:
   build-and-push:
@@ -30,7 +29,7 @@ jobs:
           java-version: 17
 
       - name: Build ${{ matrix.service }} with Gradle
-        run: ./gradlew :${{ matrix.service }}:bootJar
+        run: ./gradlew :tatti-app:${{ matrix.service }}:bootJar
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
@@ -40,7 +39,7 @@ jobs:
 
       - name: Build Docker image for ${{ matrix.service }}
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/${{ matrix.service }}:latest ${{ matrix.service }}
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/${{ matrix.service }}:latest tatti-app/${{ matrix.service }}
 
       - name: Push Docker image for ${{ matrix.service }}
         run: |
