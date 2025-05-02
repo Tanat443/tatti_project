@@ -1,9 +1,10 @@
 name: Build & Push All Microservices
 
 on:
+  workflow_dispatch:
   push:
     branches:
-      - main
+      - master
     paths:
       - 'tatti-app/**'
       - '.github/workflows/build-and-push.yml'
