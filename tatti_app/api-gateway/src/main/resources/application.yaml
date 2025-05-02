@@ -15,12 +15,18 @@ spring:
             - Path=/api/users/**
           filters:
             - AuthenticationFilter
-#        - id: order-service
-#          uri: lb://order-service
-#          predicates:
-#            - Path=/api/orders/**
-#          filters:
-#            - AuthenticationFilter
+        - id: order-service
+          uri: lb://order-service
+          predicates:
+            - Path=/api/orders/**
+          filters:
+            - AuthenticationFilter
+        - id: product-service
+          uri: lb://product-service
+          predicates:
+            - Path=/api/products/**
+          filters:
+            - AuthenticationFilter
 #        - id: catalog-service
 #          uri: lb://catalog-service
 #          predicates:
@@ -35,12 +41,12 @@ eureka:
 server:
   port: 8080
 keycloak:
-  url: http://localhost:8081/auth
+  url: ${KEYCLOAK_URL:https://tatti.pp.ua/auth}
   realm: tatti-app
   client-id: tatti-app
-  client-secret: 1KOqAXWzdkgwvNt2ZD63CZXTUeeM8ZAT
+  client-secret: Ls5zJnfJ0KrmtRF4sVTzFeBcD8KGrv1J
   username: admin
-  password: admin
+  password: tatti2025
   grant-type: password
 logging:
   level:

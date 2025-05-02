@@ -1,12 +1,11 @@
 server:
-  port: ${PORT:8083}
+  port: ${PORT:8084}
 
 spring:
+  application:
+    name: order-service
   r2dbc:
-#    url: r2dbc:pool:postgresql://localhost:2346/postgres
-#    username: postgres
-#    password: qwerty
-    url: r2dbc:pool:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:postgres}?schema=product_schema
+    url: r2dbc:pool:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:postgres}?schema=order_schema
     username: ${DB_USER:postgres}
     password: ${DB_PASSWORD:root}
 
@@ -17,9 +16,7 @@ spring:
     locations: classpath:db/migrations
     enabled: true
     baseline-on-migrate: true
-    default-schema: product_schema
-  application:
-    name: product-service
+    default-schema: order_schema
 
 eureka:
   client:
