@@ -17,6 +17,11 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+        working-directory: tatti_app/user-service
+    
+
       - name: Build user-service with Gradle
         run: ./gradlew bootJar
         working-directory: ./tatti_app/user-service
@@ -45,6 +50,11 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+        working-directory: tatti_app/order-service
+
+      
       - name: Build order-service with Gradle
         run: ./gradlew bootJar
         working-directory: ./tatti_app/order-service
@@ -73,6 +83,10 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+        working-directory: tatti_app/product-service 
+  
       - name: Build product-service with Gradle
         run: ./gradlew bootJar
         working-directory: ./tatti_app/product-service
@@ -101,6 +115,10 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+        working-directory: tatti_app/api-gateway
+
       - name: Build api-gateway with Gradle
         run: ./gradlew bootJar
         working-directory: ./tatti_app/api-gateway
@@ -128,6 +146,10 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
+
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+        working-directory: tatti_app/eureka-server
 
       - name: Build eureka-server with Gradle
         run: ./gradlew bootJar
