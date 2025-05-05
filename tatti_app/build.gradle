@@ -23,5 +23,6 @@ subprojects {
         testImplementation 'org.springframework.boot:spring-boot-starter-test'
         annotationProcessor 'org.projectlombok:lombok:1.18.30'
         compileOnly 'org.projectlombok:lombok:1.18.30'
+        implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:2.5.0'
     }
 }
