@@ -8,7 +8,7 @@ spring:
 #    username: postgres
 #    password: root
   r2dbc:
-    url: r2dbc:pool:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:postgres}
+    url: r2dbc:pool:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:postgres}?schema=user_schema
     username: ${DB_USER:postgres}
     password: ${DB_PASSWORD:root}
   flyway:
@@ -42,3 +42,7 @@ keycloak:
 logging:
   level:
     org.springframework: DEBUG
+
+shop:
+  product:
+    url: http://localhost:8083/api/shop-products

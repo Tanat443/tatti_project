@@ -37,7 +37,9 @@ out/
 
 ### VS Code ###
 .vscode/
-
-/
+../.idea
+../bakr-test.txt
+./build
+.env
 
 src/main/resources/application.properties

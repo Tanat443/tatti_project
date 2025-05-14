@@ -27,6 +27,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc'
     implementation 'com.playtika.reactivefeign:feign-reactor-webclient:3.2.6'
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:4.2.0'
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
     annotationProcessor 'org.projectlombok:lombok'
     compileOnly 'org.projectlombok:lombok'
     implementation 'org.mapstruct:mapstruct:1.5.5.Final'

@@ -1,4 +1,4 @@
-package org.example.productservice.dto;
+package com.exapmle.userservice.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,7 +11,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductDTO {
+public class ProductUniqueDTO {
     private UUID id;
     private String name;
     private String description;

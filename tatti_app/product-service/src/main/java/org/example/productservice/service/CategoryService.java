@@ -9,6 +9,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class CategoryService {
@@ -20,7 +21,7 @@ public class CategoryService {
         return categoryRepository.findAll();
     }
 
-    public Mono<Category> getCategoryById(Long id) {
+    public Mono<Category> getCategoryById(UUID id) {
         return categoryRepository.findById(id);
     }
 
@@ -28,7 +29,7 @@ public class CategoryService {
         return categoryRepository.save(category);
     }
 
-    public Mono<Category> updateCategory(Long id, Category updatedCategory) {
+    public Mono<Category> updateCategory(UUID id, Category updatedCategory) {
         return categoryRepository.findById(id)
                 .switchIfEmpty(Mono.error(new RuntimeException("Category not found")))
                 .flatMap(existingCategory -> {
@@ -37,7 +38,7 @@ public class CategoryService {
                 });
     }
 
-    public void deleteCategory(Long id) {
+    public void deleteCategory(UUID id) {
         categoryRepository.deleteById(id);
     }
 }

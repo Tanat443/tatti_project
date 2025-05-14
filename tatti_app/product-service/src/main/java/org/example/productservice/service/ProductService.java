@@ -1,6 +1,7 @@
 package org.example.productservice.service;
 
 import org.example.productservice.dto.ProductDTO;
+import org.example.productservice.dto.Status;
 import org.example.productservice.mapper.ProductMapper;
 import org.example.productservice.model.Product;
 import org.example.productservice.repository.CategoryRepository;
@@ -16,6 +17,7 @@ import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.UUID;
 
 @Service
 public class ProductService {
@@ -34,7 +36,7 @@ public class ProductService {
                 .map(productMapper::toDTO);
     }
 
-    public Mono<ProductDTO> getProductById(Long id) {
+    public Mono<ProductDTO> getProductById(UUID id) {
         return productRepository.findById(id)
                 .map(productMapper::toDTO)
                 .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found")));
@@ -48,14 +50,14 @@ public class ProductService {
                     product.setCategoryId(category.getId());
                     product.setCreatedAt(LocalDateTime.now()); // устанавливаем только createdAt
                     // не трогаем updatedAt
-
+                    product.setStatus("PENDING");
                     return productRepository.save(product)
                             .map(productMapper::toDTO);
                 });
     }
 
 
-    public Mono<ProductDTO> updateProduct(Long id, ProductDTO dto) {
+    public Mono<ProductDTO> updateProduct(UUID id, ProductDTO dto) {
         return productRepository.findById(id)
                 .switchIfEmpty(Mono.error(new RuntimeException("Product not found")))
                 .flatMap(existing -> categoryRepository.findById(dto.getCategoryId())
@@ -72,7 +74,7 @@ public class ProductService {
 
 
 
-    public Mono<Boolean> deleteProduct(Long id) {
+    public Mono<Boolean> deleteProduct(UUID id) {
         return productRepository.findById(id)
                 .switchIfEmpty(Mono.error(new RuntimeException("Product not found")))
                 .flatMap(product -> productRepository.deleteById(product.getId())
@@ -84,11 +86,31 @@ public class ProductService {
     }
 
 
-    public Flux<ProductDTO> getProductsByCategoryId(Long categoryId) {
+    public Flux<ProductDTO> getProductsByCategoryId(UUID categoryId) {
         return categoryRepository.findById(categoryId)
                 .switchIfEmpty(Mono.error(new RuntimeException("Category not found")))
                 .flatMapMany(cat -> productRepository.findByCategoryId(categoryId)
                         .map(productMapper::toDTO));
     }
 
+    public Mono<ProductDTO> updateStatus(UUID id, Status status) {
+        return productRepository.findById(id)
+                .flatMap(product -> {
+                    if ("APPROVED".equals(status.getStatus())) {
+                        product.setStatus("APPROVED");
+                        return productRepository.save(product)
+                                .map(productMapper::toDTO);
+                    } else if  ("REJECTED".equals(status.getStatus())){
+                        product.setStatus("REJECTED");
+                        return productRepository.save(product)
+                                .map(productMapper::toDTO);
+                    }else if  ("PENDING".equals(status.getStatus())){
+                        product.setStatus("PENDING");
+                        return productRepository.save(product)
+                                .map(productMapper::toDTO);
+                    }
+                    return Mono.empty(); // или Mono.error(new IllegalArgumentException("Invalid status"))
+
+                });
+    }
 }

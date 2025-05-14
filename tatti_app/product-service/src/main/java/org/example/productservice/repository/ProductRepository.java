@@ -1,13 +1,13 @@
     package org.example.productservice.repository;
 
     import org.example.productservice.model.Product;
-    import org.springframework.data.repository.reactive.ReactiveCrudRepository;
+    import org.springframework.data.r2dbc.repository.R2dbcRepository;
     import org.springframework.stereotype.Repository;
     import reactor.core.publisher.Flux;
 
-    import java.util.List;
+    import java.util.UUID;
 
     @Repository
-    public interface ProductRepository extends ReactiveCrudRepository<Product, Long> {
-        Flux<Product> findByCategoryId(Long categoryId);
+    public interface ProductRepository extends R2dbcRepository<Product, UUID> {
+        Flux<Product> findByCategoryId(UUID categoryId);
     }

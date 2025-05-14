@@ -3,12 +3,10 @@ package org.example.productservice.controller;
 import lombok.RequiredArgsConstructor;
 import org.example.productservice.model.Category;
 import org.example.productservice.service.CategoryService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,7 +21,7 @@ public class CategoryController {
     }
 
     @GetMapping("/{id}")
-    public Mono<Category> getCategoryById(@PathVariable Long id) {
+    public Mono<Category> getCategoryById(@PathVariable UUID id) {
         return categoryService.getCategoryById(id)
                 .switchIfEmpty(Mono.error(new RuntimeException("Category not found")));
     }
@@ -34,12 +32,12 @@ public class CategoryController {
     }
 
     @PutMapping("/{id}")
-    public Mono<Category> updateCategory(@PathVariable Long id, @RequestBody Category category) {
+    public Mono<Category> updateCategory(@PathVariable UUID id, @RequestBody Category category) {
         return categoryService.updateCategory(id, category);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteCategory(@PathVariable Long id) {
+    public void deleteCategory(@PathVariable UUID id) {
         categoryService.deleteCategory(id);
     }
 }
